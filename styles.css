@@ -1,0 +1,375 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --blush: #ffeaf2;
+  --rose: #fbc4d4;
+  --flamingo: #f49ac1;
+  --magenta: #e8628f;
+  --plum: #7a2b4c;
+
+  --ink: #4a1f31;
+  --ink-soft: #8a5a6c;
+  --cream: #fff6f9;
+
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-body: "Jost", "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--blush);
+  -webkit-font-smoothing: antialiased;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Nav
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px clamp(20px, 5vw, 56px);
+  mix-blend-mode: difference;
+}
+
+.nav-mark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 22px;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.nav-links {
+  display: flex;
+  gap: clamp(16px, 3vw, 34px);
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+}
+
+/* ============================================================
+   Panels
+   ============================================================ */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.panel {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px clamp(20px, 8vw, 120px);
+}
+
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+}
+
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.05;
+  margin: 0 0 22px;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: clamp(44px, 8vw, 96px);
+}
+
+h2 {
+  font-size: clamp(34px, 6vw, 64px);
+}
+
+em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--magenta);
+}
+
+.lede {
+  max-width: 480px;
+  font-size: clamp(15px, 1.6vw, 18px);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* Hero */
+.hero .lede {
+  margin-bottom: 40px;
+}
+
+.scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.scroll-cue span {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(var(--ink-soft), transparent);
+  animation: cueMove 1.8s ease-in-out infinite;
+}
+
+@keyframes cueMove {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* Product panels: copy pinned to one side, 3D canvas fills the rest visually */
+.product-panel {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.product-copy {
+  max-width: 460px;
+}
+
+.product-panel .view-btn {
+  margin-top: 26px;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  padding: 14px 30px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.product-panel .view-btn:hover {
+  background: var(--magenta);
+  transform: translateY(-2px);
+}
+
+#lipstick .product-copy { margin-left: 0; }
+#perfume .product-copy { margin-left: auto; text-align: right; }
+#perfume .product-panel,
+#perfume { align-items: flex-end; }
+#compact .product-copy { margin-left: 0; }
+
+/* Footer */
+.footer-panel {
+  background: var(--plum);
+  color: var(--cream);
+}
+
+.footer-panel .eyebrow {
+  color: rgba(255, 246, 249, 0.6);
+}
+
+.footer-panel h2 {
+  color: var(--cream);
+}
+
+.footer-panel em {
+  color: var(--rose);
+}
+
+.footer-panel .lede {
+  color: rgba(255, 246, 249, 0.75);
+}
+
+/* ============================================================
+   Product detail overlay
+   ============================================================ */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(74, 31, 49, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: overlayIn 0.3s ease both;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.detail-card {
+  position: relative;
+  background: var(--cream);
+  border-radius: 28px;
+  max-width: 420px;
+  width: 100%;
+  padding: 44px 38px;
+  text-align: left;
+  box-shadow: 0 30px 70px rgba(122, 43, 76, 0.35);
+  animation: cardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.detail-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: var(--rose);
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.detail-close:hover {
+  background: var(--flamingo);
+}
+
+.detail-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  margin: 0 0 10px;
+}
+
+.detail-card h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30px;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.detail-price {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+.detail-tagline {
+  font-style: italic;
+  font-family: var(--font-display);
+  color: var(--magenta);
+  margin: 0 0 14px;
+}
+
+.detail-body {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin: 0 0 26px;
+}
+
+.detail-cta {
+  width: 100%;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  padding: 15px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.detail-cta:hover {
+  background: var(--magenta);
+}
+
+/* ============================================================
+   Mobile
+   ============================================================ */
+@media (max-width: 720px) {
+  .nav-links {
+    gap: 14px;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+  }
+
+  .panel {
+    padding: 100px 22px;
+  }
+
+  .product-panel,
+  #perfume {
+    align-items: center;
+    text-align: center;
+  }
+
+  .product-copy,
+  #perfume .product-copy {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .scroll-cue span {
+    animation: none;
+  }
+}
