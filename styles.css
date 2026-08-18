@@ -38,9 +38,7 @@ body {
   pointer-events: none;
 }
 
-/* ============================================================
-   Nav
-   ============================================================ */
+/* Nav */
 .nav {
   position: fixed;
   top: 0;
@@ -82,9 +80,7 @@ body {
   opacity: 1;
 }
 
-/* ============================================================
-   Panels
-   ============================================================ */
+/* Panels */
 main {
   position: relative;
   z-index: 1;
@@ -138,7 +134,6 @@ em {
   margin: 0;
 }
 
-/* Hero */
 .hero .lede {
   margin-bottom: 40px;
 }
@@ -166,7 +161,6 @@ em {
   50% { transform: translateY(8px); opacity: 1; }
 }
 
-/* Product panels: copy pinned to one side, 3D canvas fills the rest visually */
 .product-panel {
   align-items: flex-start;
   text-align: left;
@@ -201,7 +195,6 @@ em {
 #perfume { align-items: flex-end; }
 #compact .product-copy { margin-left: 0; }
 
-/* Footer */
 .footer-panel {
   background: var(--plum);
   color: var(--cream);
@@ -223,9 +216,11 @@ em {
   color: rgba(255, 246, 249, 0.75);
 }
 
-/* ============================================================
-   Product detail overlay
-   ============================================================ */
+/* Product detail overlay */
+.detail-overlay[hidden] {
+  display: none;
+}
+
 .detail-overlay {
   position: fixed;
   inset: 0;
@@ -336,9 +331,7 @@ em {
   background: var(--magenta);
 }
 
-/* ============================================================
-   Mobile
-   ============================================================ */
+/* Mobile */
 @media (max-width: 720px) {
   .nav-links {
     gap: 14px;
