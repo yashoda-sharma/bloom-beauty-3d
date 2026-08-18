@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bloom — Beauty, Suspended</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,500&family=Jost:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+
+<link rel="stylesheet" href="styles.css" />
+
+<!-- Three.js via import map -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+
+<header class="nav">
+  <div class="nav-mark">Bloom</div>
+  <nav class="nav-links">
+    <a href="#lipstick">Lipstick</a>
+    <a href="#perfume">Perfume</a>
+    <a href="#compact">Compact</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="panel hero" id="hero">
+    <p class="eyebrow">a beauty capsule, held in air</p>
+    <h1>Beauty,<br /><em>suspended.</em></h1>
+    <p class="lede">
+      Three essentials, floating in soft pink light.
+      Scroll to move through them — get close, and each one opens.
+    </p>
+    <div class="scroll-cue" aria-hidden="true">
+      <span></span>
+      scroll
+    </div>
+  </section>
+
+  <section class="panel product-panel" id="lipstick" data-product="lipstick">
+    <div class="product-copy">
+      <p class="eyebrow">01 · lip</p>
+      <h2>Bloom Velvet<br />Lipstick</h2>
+      <p class="lede">A weightless matte that settles into a blurred-velvet finish. Move your cursor close — the cap slides free on its own.</p>
+      <button class="view-btn" data-open="lipstick">View details</button>
+    </div>
+  </section>
+
+  <section class="panel product-panel" id="perfume" data-product="perfume">
+    <div class="product-copy">
+      <p class="eyebrow">02 · scent</p>
+      <h2>Petal Mist<br />Eau de Parfum</h2>
+      <p class="lede">Bulgarian rose and warm peony, settled into soft musk. Reach toward it and watch the cap lift.</p>
+      <button class="view-btn" data-open="perfume">View details</button>
+    </div>
+  </section>
+
+  <section class="panel product-panel" id="compact" data-product="compact">
+    <div class="product-copy">
+      <p class="eyebrow">03 · finish</p>
+      <h2>Dew Powder<br />Compact</h2>
+      <p class="lede">A translucent pink-tinted press that blurs without flattening the skin. Come close, and the lid swings open.</p>
+      <button class="view-btn" data-open="compact">View details</button>
+    </div>
+  </section>
+
+  <footer class="panel footer-panel">
+    <p class="eyebrow">bloom</p>
+    <h2>Beauty is<br /><em>worth pausing for.</em></h2>
+    <p class="lede">Three products. No rush. Look closely.</p>
+  </footer>
+
+</main>
+
+<!-- Product detail overlay -->
+<div class="detail-overlay" id="detailOverlay" hidden>
+  <div class="detail-card">
+    <button class="detail-close" id="detailClose" aria-label="Close">&times;</button>
+    <p class="detail-eyebrow" id="detailEyebrow"></p>
+    <h3 id="detailName"></h3>
+    <p class="detail-price" id="detailPrice"></p>
+    <p class="detail-tagline" id="detailTagline"></p>
+    <p class="detail-body" id="detailBody"></p>
+    <button class="detail-cta">Add to bag</button>
+  </div>
+</div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
