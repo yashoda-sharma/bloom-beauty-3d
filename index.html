@@ -22,6 +22,9 @@
   }
 }
 </script>
+
+<!-- Supabase client -->
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -34,6 +37,7 @@
     <a href="#perfume">Perfume</a>
     <a href="#compact">Compact</a>
   </nav>
+  <button class="auth-trigger" id="authTrigger">Sign in</button>
 </header>
 
 <main>
@@ -99,6 +103,46 @@
   </div>
 </div>
 
+<!-- Auth overlay -->
+<div class="auth-overlay" id="authOverlay" hidden>
+  <div class="auth-card">
+    <button class="detail-close" id="authClose" aria-label="Close">&times;</button>
+
+    <div id="authSignedOut">
+      <p class="detail-eyebrow" id="authModeLabel">Sign in</p>
+      <h3>Welcome back.</h3>
+
+      <form id="authForm">
+        <label class="auth-field">
+          <span>Email</span>
+          <input type="email" id="authEmail" required autocomplete="email" />
+        </label>
+        <label class="auth-field">
+          <span>Password</span>
+          <input type="password" id="authPassword" required autocomplete="current-password" minlength="6" />
+        </label>
+
+        <p class="auth-message" id="authMessage" hidden></p>
+
+        <button type="submit" class="detail-cta" id="authSubmit">Sign in</button>
+      </form>
+
+      <p class="auth-switch">
+        <span id="authSwitchText">Don't have an account?</span>
+        <button type="button" id="authSwitchBtn">Sign up</button>
+      </p>
+    </div>
+
+    <div id="authSignedIn" hidden>
+      <p class="detail-eyebrow">Signed in as</p>
+      <h3 id="authUserEmail"></h3>
+      <p class="lede" style="margin: 10px 0 26px;">You're all set — favorites and orders will save to this account as we add them.</p>
+      <button class="detail-cta" id="authSignOut">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
 <script type="module" src="main.js"></script>
 </body>
 </html>
