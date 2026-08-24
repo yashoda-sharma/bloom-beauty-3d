@@ -178,12 +178,95 @@ em {
 }
 
 .product-panel {
+  position: relative;
   align-items: flex-start;
   text-align: left;
 }
 
 .product-copy {
+  position: relative;
+  z-index: 2;
   max-width: 460px;
+}
+
+.product-visual {
+  --photo-scale: 0.76;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --shadow-x: 0px;
+  --shadow-y: 18px;
+  position: absolute;
+  z-index: 1;
+  right: clamp(8%, 13vw, 19%);
+  top: 50%;
+  width: clamp(220px, 27vw, 390px);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translateY(-50%) perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transform-style: preserve-3d;
+  transition: filter 0.45s ease;
+  will-change: transform, opacity;
+  pointer-events: auto;
+}
+
+.product-visual::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 15%;
+  right: 15%;
+  bottom: 8%;
+  height: 12%;
+  border-radius: 50%;
+  background: rgba(74, 31, 49, 0.28);
+  filter: blur(18px);
+  transform: translate3d(var(--shadow-x), var(--shadow-y), -18px) scale(0.82);
+  opacity: 0.55;
+  transition: transform 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
+}
+
+.product-visual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(var(--photo-scale)) translateZ(16px);
+  filter: drop-shadow(var(--shadow-x) var(--shadow-y) 15px rgba(74, 31, 49, 0.22));
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.product-visual.is-revealed img {
+  filter: drop-shadow(var(--shadow-x) var(--shadow-y) 22px rgba(122, 43, 76, 0.34));
+}
+
+.product-visual.is-revealed::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 5% 15%;
+  border-radius: 40%;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.42) 49%, transparent 63%);
+  transform: translateX(-125%);
+  animation: photoShimmer 0.85s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes photoShimmer {
+  to { transform: translateX(125%); }
+}
+
+#lipstick .product-visual,
+#compact .product-visual {
+  right: clamp(8%, 13vw, 19%);
+}
+
+#perfume .product-visual {
+  left: clamp(8%, 13vw, 19%);
+  right: auto;
 }
 
 .product-panel .view-btn {
@@ -470,6 +553,21 @@ em {
   #perfume .product-copy {
     margin: 0 auto;
     text-align: center;
+  }
+
+  .product-visual,
+  #lipstick .product-visual,
+  #compact .product-visual,
+  #perfume .product-visual {
+    top: 28%;
+    left: 50%;
+    right: auto;
+    width: min(58vw, 290px);
+    transform: translate(-50%, -50%) perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  }
+
+  .product-copy {
+    margin-top: 24vh;
   }
 }
 
