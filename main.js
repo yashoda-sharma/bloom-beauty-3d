@@ -524,11 +524,13 @@ function animate() {
   const avatarOpacity = 0.12 + heroFocus * 0.88;
   avatar.position.y = avatar.userData.baseY + Math.sin(t * 1.35) * 0.035;
   avatar.userData.bust.scale.y = 1 + Math.sin(t * 1.35) * 0.018;
+  const pointerX = pointer.x < 0 ? 0 : (pointer.x / window.innerWidth) * 2 - 1;
+  const pointerY = pointer.y < 0 ? 0 : (pointer.y / window.innerHeight) * 2 - 1;
   avatar.userData.head.rotation.y = avatarBaseRotY + THREE.MathUtils.clamp(
-    ((pointer.x / window.innerWidth) * 2 - 1) * 0.18, -0.18, 0.18
+    pointerX * 0.18, -0.18, 0.18
   );
   avatar.userData.head.rotation.x = THREE.MathUtils.clamp(
-    ((pointer.y / window.innerHeight) * 2 - 1) * 0.07, -0.07, 0.07
+    pointerY * 0.07, -0.07, 0.07
   );
 
   if (t > nextBlinkAt && blinkStartedAt < 0) blinkStartedAt = t;
