@@ -64,15 +64,15 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 11);
 
 /* Lights — warm pink key + soft fill */
-const key = new THREE.DirectionalLight(0xffffff, 1.4);
+const key = new THREE.DirectionalLight(0xffd1df, 1.55);
 key.position.set(4, 6, 8);
 scene.add(key);
 
-const fill = new THREE.PointLight(0xff8fbf, 1.2, 30);
+const fill = new THREE.PointLight(0xff9fc4, 1.15, 30);
 fill.position.set(-6, -2, 6);
 scene.add(fill);
 
-const rim = new THREE.PointLight(0xffffff, 0.6, 30);
+const rim = new THREE.PointLight(0xffb6d0, 0.9, 30);
 rim.position.set(0, 4, -6);
 scene.add(rim);
 
@@ -121,6 +121,139 @@ const matPowder = new THREE.MeshPhysicalMaterial({
   metalness: 0,
   roughness: 0.9,
 });
+
+/* ============================================================
+   Procedural beauty avatar — intentionally self-contained
+   ============================================================ */
+const skin = new THREE.MeshPhysicalMaterial({
+  color: 0xd99583,
+  roughness: 0.48,
+  metalness: 0,
+  sheen: 0.28,
+  sheenColor: new THREE.Color(0xffb4aa),
+  sheenRoughness: 0.42,
+  clearcoat: 0.04,
+  thickness: 0.35,
+});
+const skinLight = skin.clone();
+skinLight.color.set(0xe7ab98);
+skinLight.roughness = 0.44;
+const skinBlush = skin.clone();
+skinBlush.color.set(0xc87575);
+skinBlush.roughness = 0.52;
+const hair = new THREE.MeshPhysicalMaterial({
+  color: 0x3d2028,
+  roughness: 0.34,
+  sheen: 0.48,
+  sheenColor: new THREE.Color(0xff9bbd),
+});
+const eyeWhite = new THREE.MeshPhysicalMaterial({
+  color: 0xfff8f3,
+  roughness: 0.22,
+  clearcoat: 0.2,
+});
+const iris = new THREE.MeshPhysicalMaterial({
+  color: 0x563743,
+  roughness: 0.18,
+  clearcoat: 0.55,
+});
+const lip = new THREE.MeshPhysicalMaterial({
+  color: 0x9f3f60,
+  roughness: 0.3,
+  sheen: 0.5,
+  sheenColor: new THREE.Color(0xf08aaa),
+});
+
+function avatarSphere(material, scale, position, segments = 20) {
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, segments, segments), material);
+  mesh.scale.set(...scale);
+  mesh.position.set(...position);
+  return mesh;
+}
+
+function avatarLathe(material, points, position, rotation = [0, 0, 0]) {
+  const mesh = new THREE.Mesh(
+    new THREE.LatheGeometry(points.map(([x, y]) => new THREE.Vector2(x, y)), 20),
+    material
+  );
+  mesh.position.set(...position);
+  mesh.rotation.set(...rotation);
+  return mesh;
+}
+
+function buildAvatar() {
+  const root = new THREE.Group();
+  root.name = "procedural-beauty-avatar";
+  root.position.set(2.45, -0.25, -1.2);
+  root.scale.setScalar(1.08);
+
+  const bust = new THREE.Group();
+  bust.name = "avatar-bust";
+  bust.position.y = -0.08;
+  root.add(bust);
+
+  // Soft custom-shaped torso and shoulders made from low-cost primitives.
+  bust.add(avatarSphere(skin, [1.28, 0.72, 0.56], [0, -1.48, 0], 24));
+  bust.add(avatarSphere(skinLight, [0.62, 0.78, 0.48], [0, -0.92, 0.02], 20));
+  bust.add(avatarLathe(skin, [
+    [0.34, -0.58], [0.39, -0.25], [0.31, 0.05], [0.25, 0.28], [0.2, 0.4],
+  ], [0, -0.28, 0]));
+
+  const head = new THREE.Group();
+  head.name = "avatar-head";
+  head.position.set(0, 0.92, 0.04);
+  bust.add(head);
+
+  // The head is a vertically biased sphere plus a smaller jaw volume.
+  head.add(avatarSphere(skinLight, [0.83, 1.02, 0.7], [0, 0.22, 0], 24));
+  head.add(avatarSphere(skin, [0.67, 0.48, 0.62], [0, -0.42, 0.02], 22));
+  head.add(avatarSphere(skin, [0.44, 0.3, 0.55], [0, -0.7, 0.02], 20));
+
+  // Hair cap and a few soft lobes keep the silhouette natural without a model file.
+  head.add(avatarSphere(hair, [0.84, 0.65, 0.7], [0, 0.72, -0.02], 20));
+  head.add(avatarSphere(hair, [0.25, 0.68, 0.5], [-0.69, 0.26, -0.02], 16));
+  head.add(avatarSphere(hair, [0.25, 0.68, 0.5], [0.69, 0.26, -0.02], 16));
+
+  const eyeGroups = [];
+  for (const side of [-1, 1]) {
+    const eye = new THREE.Group();
+    eye.position.set(side * 0.31, 0.31, 0.64);
+    eye.scale.set(1, 0.62, 0.5);
+    eye.add(avatarSphere(eyeWhite, [0.2, 0.13, 0.09], [0, 0, 0], 16));
+    eye.add(avatarSphere(iris, [0.085, 0.085, 0.035], [0, 0, 0.08], 14));
+    eye.add(avatarSphere(new THREE.MeshPhysicalMaterial({
+      color: 0x25151c, roughness: 0.12, clearcoat: 0.5,
+    }), [0.035, 0.035, 0.018], [0, 0, 0.115], 10));
+    head.add(eye);
+    eyeGroups.push(eye);
+
+    const brow = avatarLathe(hair, [
+      [0.02, -0.15], [0.06, -0.07], [0.07, 0.08], [0.035, 0.15],
+    ], [side * 0.31, 0.55, 0.66], [0, side * 0.12, side * 0.2]);
+    brow.scale.set(0.8, 0.7, 0.7);
+    head.add(brow);
+  }
+
+  // Nose bridge, tip, philtrum, and lips: small overlapping forms read better than a cone.
+  head.add(avatarLathe(skinLight, [
+    [0.02, -0.3], [0.07, -0.12], [0.09, 0.12], [0.045, 0.3],
+  ], [0, 0.03, 0.69], [Math.PI / 2, 0, 0]));
+  head.add(avatarSphere(skin, [0.14, 0.1, 0.12], [0, -0.22, 0.73], 14));
+  head.add(avatarSphere(skinBlush, [0.095, 0.12, 0.06], [-0.09, -0.2, 0.77], 14));
+  head.add(avatarSphere(skinBlush, [0.095, 0.12, 0.06], [0.09, -0.2, 0.77], 14));
+  head.add(avatarSphere(lip, [0.2, 0.055, 0.045], [0, -0.48, 0.68], 16));
+  head.add(avatarSphere(skinBlush, [0.14, 0.035, 0.025], [0, -0.55, 0.69], 14));
+
+  root.userData.head = head;
+  root.userData.bust = bust;
+  root.userData.eyes = eyeGroups;
+  root.userData.baseY = root.position.y;
+  root.userData.baseScale = root.scale.x;
+  return root;
+}
+
+const avatar = buildAvatar();
+scene.add(avatar);
 
 /* ============================================================
    Build: Lipstick (base + body + sliding cap)
@@ -375,6 +508,9 @@ window.addEventListener("resize", () => {
    Animation loop
    ============================================================ */
 const clock = new THREE.Clock();
+const avatarBaseRotY = avatar.userData.head.rotation.y;
+let nextBlinkAt = 2.8;
+let blinkStartedAt = -1;
 
 function animate() {
   const t = clock.getElapsedTime();
@@ -382,6 +518,39 @@ function animate() {
 
   // Background shade
   document.body.style.backgroundColor = "#" + lerpShade(progress).getHexString();
+
+  // Keep the model as a hero-only companion so it never competes with product panels.
+  const heroFocus = focusAmount(progress, sectionCenters.hero, 0.22);
+  const avatarOpacity = 0.12 + heroFocus * 0.88;
+  avatar.position.y = avatar.userData.baseY + Math.sin(t * 1.35) * 0.035;
+  avatar.userData.bust.scale.y = 1 + Math.sin(t * 1.35) * 0.018;
+  avatar.userData.head.rotation.y = avatarBaseRotY + THREE.MathUtils.clamp(
+    ((pointer.x / window.innerWidth) * 2 - 1) * 0.18, -0.18, 0.18
+  );
+  avatar.userData.head.rotation.x = THREE.MathUtils.clamp(
+    ((pointer.y / window.innerHeight) * 2 - 1) * 0.07, -0.07, 0.07
+  );
+
+  if (t > nextBlinkAt && blinkStartedAt < 0) blinkStartedAt = t;
+  if (blinkStartedAt >= 0) {
+    const blinkProgress = (t - blinkStartedAt) / 0.16;
+    const blink = blinkProgress < 0.5
+      ? blinkProgress * 2
+      : (1 - blinkProgress) * 2;
+    avatar.userData.eyes.forEach((eye) => {
+      eye.scale.y = 0.62 * THREE.MathUtils.clamp(1 - blink, 0.08, 1);
+    });
+    if (blinkProgress >= 1) {
+      blinkStartedAt = -1;
+      nextBlinkAt = t + 3.2 + Math.random() * 2.2;
+    }
+  }
+  avatar.traverse((node) => {
+    if (node.isMesh && node.material && "opacity" in node.material) {
+      node.material.transparent = avatarOpacity < 0.99;
+      node.material.opacity += (avatarOpacity - node.material.opacity) * 0.08;
+    }
+  });
 
   // Layout targets per product
   const layouts = {
